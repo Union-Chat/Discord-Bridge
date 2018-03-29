@@ -1,3 +1,5 @@
+package blog.pprogs.unionDiscordBridge
+
 import blog.pprogs.ktunion.UnionClient
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
@@ -9,7 +11,7 @@ fun main(args: Array<String>) {
     val jda = JDABuilder(AccountType.BOT)
             .setToken(creds[2])
             .buildAsync()
-//    val channel = jda.getTextChannelById(386895488621871107)
+
     client.onTextMessage = { who, content, _ ->
         jda.getTextChannelById(creds[3]).sendMessage("```<${who.replace("```", "`\u200B`\u200B`\u200B")}> ${content.replace("```", "`\u200B`\u200B`\u200B")}```").queue()
     }
