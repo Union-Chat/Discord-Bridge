@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
             .buildAsync()
 
     client.onTextMessage = { who, content, _ ->
-        jda.getTextChannelById(creds[3]).sendMessage("```<${who.replace("```", "`\u200B`\u200B`\u200B")}> ${content.replace("```", "`\u200B`\u200B`\u200B")}```").queue()
+        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("```", "`\u200B`\u200B`\u200B")}: ${content.replace("```", "`\u200B`\u200B`\u200B")}```").queue()
     }
     client.start()
 }
