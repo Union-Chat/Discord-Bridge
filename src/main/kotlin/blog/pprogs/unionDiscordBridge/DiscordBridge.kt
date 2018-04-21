@@ -19,6 +19,12 @@ fun main(args: Array<String>) {
     client.onTextMessage = { who, content, _ ->
         jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("```", "`\u200B`\u200B`\u200B")}: ${content.replace("```", "`\u200B`\u200B`\u200B")}```").queue()
     }
+
+    client.onStartClosed = { _, _ ->
+        Thread.sleep(1000 * 10)
+        System.exit(0)
+    }
+
     client.start()
 }
 
