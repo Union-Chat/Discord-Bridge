@@ -10,7 +10,7 @@ import kotlin.concurrent.thread
 
 fun main(args: Array<String>) {
     val creds = File("creds.txt").readLines()
-    val client = UnionClient(username = creds[0], password = creds[1], selfbot = true)
+    val client = UnionClient(username = creds[0], password = creds[1], selfbot = true, bot = false)
     val jda = JDABuilder(AccountType.BOT)
             .setToken(creds[2])
             .addEventListener(Listener(client))
