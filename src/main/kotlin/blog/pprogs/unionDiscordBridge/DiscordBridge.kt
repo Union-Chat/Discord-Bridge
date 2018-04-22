@@ -36,7 +36,7 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
 
         if (event.channel.idLong != 429044006392037376) return
 
-        client.sendMessage("<${event.author.name}> ${event.message.contentRaw.dropLast(801)}")
+        client.sendMessage("<${event.author.name}> ${event.message.contentRaw.dropLast(801).replace("heck", "****")}")
         event.message.delete().queue()
     }
 }
