@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import java.io.File
-import kotlin.concurrent.thread
 
 fun main(args: Array<String>) {
     val creds = File("creds.txt").readLines()
@@ -42,7 +41,9 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
             result = result.substring(0, 801)
         }
 
-        client.sendMessage("<${event.author.name}> $result")
+        val name = if (event.author.idLong == 280001404020588544) "" else "<${event.author.name}> "
+
+        client.sendMessage("$name$result")
         event.message.delete().queue()
     }
 }
