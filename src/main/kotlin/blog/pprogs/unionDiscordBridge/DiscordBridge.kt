@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
             .buildAsync()
 
     client.onTextMessage = { who, content, _ ->
-        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("```", "`\u200B`\u200B`\u200B")}: ${content.replace("```", "`\u200B`\u200B`\u200B")}```").queue()
+        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("`", "`\u200B")}: ${content.replace("`", "`\u200B")}```").queue()
     }
 
     client.onStartClosed = { _, _ ->
@@ -36,7 +36,7 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
 
         if (event.channel.idLong != 429044006392037376) return
 
-        var result = event.message.contentRaw.replace("heck", "****")
+        var result = "foo".replace("heck", "****")
 
         if (result.length > 801) {
             result = result.substring(0, 801)
