@@ -16,7 +16,12 @@ fun main(args: Array<String>) {
             .buildAsync()
 
     client.onTextMessage = { who, content, _ ->
-        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("`", "`\u200B")}: ${content.replace("`", "`\u200B")}```").queue()
+        var message = content
+        if (message.length > 1500) {
+            message = message.substring(0, 1500)
+        }
+
+        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("`", "`\u200B")}: ${message.replace("`", "`\u200B")}```").queue()
     }
 
     client.onStartClosed = { _, _ ->
@@ -35,15 +40,13 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
 
         if (event.channel.idLong != 429044006392037376) return
 
-        var result = event.message.contentRaw.replace("heck", "****")
+        var message = event.message.contentRaw
 
-        if (result.length > 801) {
-            result = result.substring(0, 801)
+        if (message.length > 801) {
+            message = message.substring(0, 801)
         }
 
-        val name = if (event.author.idLong == 280001404020588544) "" else "<${event.author.name}> "
-
-        client.sendMessage("$name$result")
+        client.sendMessage("${event.author.name}$message")
         event.message.delete().queue()
     }
 }
