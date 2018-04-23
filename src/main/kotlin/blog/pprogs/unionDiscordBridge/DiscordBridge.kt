@@ -46,7 +46,7 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
             message = message.substring(0, 801)
         }
 
-        client.sendMessage("${event.author.name}$message")
+        client.sendMessage("<${event.author.name}> $message")
         event.message.delete().queue()
     }
 }
