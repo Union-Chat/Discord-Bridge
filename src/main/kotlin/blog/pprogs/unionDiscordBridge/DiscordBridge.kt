@@ -36,6 +36,8 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
     override fun onMessageReceived(event: MessageReceivedEvent?) {
         if (event == null) return
 
+        if (event.author.isBot) return
+
         if (event.author.idLong == 429038614320513024) return
 
         if (event.channel.idLong != 429044006392037376) return
