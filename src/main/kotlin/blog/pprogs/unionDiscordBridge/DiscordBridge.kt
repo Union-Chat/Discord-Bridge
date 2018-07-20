@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
             message = message.substring(0, 1500)
         }
 
-        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("`", "`\u200B")}: ${message.replace("`", "`\u200B")}```".take(1500)).queue()
+        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("`", "`\u200B").take(30)}: ${message.replace("`", "`\u200B").take(1500)}```").queue()
     }
 
     client.onStartClosed = { _, _ ->
