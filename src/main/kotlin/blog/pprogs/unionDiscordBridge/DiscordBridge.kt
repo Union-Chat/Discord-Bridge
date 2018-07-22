@@ -67,6 +67,11 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
             message = message.substring(0, 801)
         }
 
+        message = Regex("<@!?(\\d{17,20})>").replace(message) {
+            val user = event.jda.getUserById(it.groups[1]!!.value)
+            if (user != null) "{${user.name}}" else "{mention}"
+        }
+
         client.sendMessage("<${event.author.name}> $message")
 //        event.message.delete().queue()
     }
