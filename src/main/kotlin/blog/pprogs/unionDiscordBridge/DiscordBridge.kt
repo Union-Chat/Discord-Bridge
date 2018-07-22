@@ -4,6 +4,7 @@ import blog.pprogs.ktunion.UnionClient
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
+import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import net.dv8tion.jda.webhook.WebhookClientBuilder
@@ -21,6 +22,25 @@ fun String.clean(jda: JDA): String {
     return content
             .replace("@everyone", "@\u200beveryone")
             .replace("@here", "@\u200bhere")
+}
+
+fun Message.displayForUnion(): String {
+    var contentRaw = contentRaw
+    contentRaw = Regex("<@!?(\\d{17,20})>").replace(contentRaw) {
+        val foundUser = jda.getUserById(it.groups[1]!!.value)
+        if (foundUser != null) "{${foundUser.name}}" else "{mention}"
+    }
+    emotes.forEach { emote ->
+        contentRaw = contentRaw.replace(emote.asMention, ":" + emote.name + ":")
+    }
+    mentionedChannels.forEach { mentionedChannel ->
+        contentRaw = contentRaw.replace(mentionedChannel.asMention, '#' + mentionedChannel.name)
+    }
+    mentionedRoles.forEach { mentionedRole ->
+        contentRaw = contentRaw.replace(mentionedRole.asMention, '@' + mentionedRole.name)
+    }
+
+    return contentRaw + attachments.filter { it.isImage }.joinToString(" ", " ") { it.url }
 }
 
 fun main(args: Array<String>) {
@@ -61,20 +81,6 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
 
         if (event.channel.idLong != 429044006392037376) return
 
-        var message = event.message.contentDisplay
-
-        if (message.length > 801) {
-            message = message.substring(0, 801)
-        }
-
-        message = Regex("<@!?(\\d{17,20})>").replace(message) {
-            val user = event.jda.getUserById(it.groups[1]!!.value)
-            if (user != null) "{${user.name}}" else "{mention}"
-        }
-
-        message += event.message.attachments.filter { it.isImage }.joinToString(" ", " ") { it.url }
-
-        client.sendMessage("<${event.author.name}> ${message.take(1000)}")
-//        event.message.delete().queue()
+        client.sendMessage("<${event.author.name}> ${event.message.displayForUnion().take(900)}")
     }
 }
