@@ -2,10 +2,26 @@ package blog.pprogs.unionDiscordBridge
 
 import blog.pprogs.ktunion.UnionClient
 import net.dv8tion.jda.core.AccountType
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import net.dv8tion.jda.webhook.WebhookClientBuilder
+import net.dv8tion.jda.webhook.WebhookMessageBuilder
 import java.io.File
+
+fun String.clean(jda: JDA): String {
+    var content = this
+
+    content = Regex("<@!?(\\d{17,20})>").replace(content) {
+        val user = jda.getUserById(it.groups[1]!!.value)
+        if (user != null) "@${user.name}" else "@mention"
+    }
+
+    return content
+            .replace("@everyone", "@\u200beveryone")
+            .replace("@here", "@\u200bhere")
+}
 
 fun main(args: Array<String>) {
     val creds = File("creds.txt").readLines()
@@ -15,13 +31,16 @@ fun main(args: Array<String>) {
             .addEventListener(Listener(client))
             .buildAsync()
 
-    client.onTextMessage = { who, content, _ ->
-        var message = content
-        if (message.length > 1500) {
-            message = message.substring(0, 1500)
-        }
+    val whClient = WebhookClientBuilder(creds[3]).build()
 
-        jda.getTextChannelById(creds[3]).sendMessage("```yaml\n${who.replace("`", "`\u200B").take(30)}: ${message.replace("`", "`\u200B").take(1500)}```").queue()
+    client.onTextMessage = { who, content, _ ->
+        if (who.id != creds[0]) {
+            whClient.send(WebhookMessageBuilder()
+                    .setAvatarUrl(who.avatarUrl)
+                    .setContent(content.clean(jda).take(1500))
+                    .setUsername(who.id)
+                    .build())
+        }
     }
 
     client.onStartClosed = { _, _ ->
@@ -49,6 +68,6 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
         }
 
         client.sendMessage("<${event.author.name}> $message")
-        event.message.delete().queue()
+//        event.message.delete().queue()
     }
 }
