@@ -61,7 +61,7 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
 
         if (event.channel.idLong != 429044006392037376) return
 
-        var message = event.message.contentRaw
+        var message = event.message.contentDisplay
 
         if (message.length > 801) {
             message = message.substring(0, 801)
