@@ -72,7 +72,9 @@ class Listener(private val client: UnionClient) : ListenerAdapter() {
             if (user != null) "{${user.name}}" else "{mention}"
         }
 
-        client.sendMessage("<${event.author.name}> $message")
+        message += event.message.attachments.joinToString(" ")
+
+        client.sendMessage("<${event.author.name}> ${message.take(1000)}")
 //        event.message.delete().queue()
     }
 }
