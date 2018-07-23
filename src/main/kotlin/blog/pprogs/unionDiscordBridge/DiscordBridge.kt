@@ -46,6 +46,9 @@ fun Message.displayForUnion(): String {
 fun main(args: Array<String>) {
     val creds = File("creds.txt").readLines()
     val client = UnionClient(username = creds[0], password = creds[1], selfbot = true, bot = false)
+
+    client.start()
+
     val jda = JDABuilder(AccountType.BOT)
             .setToken(creds[2])
             .addEventListener(Listener(client))
@@ -67,8 +70,6 @@ fun main(args: Array<String>) {
         Thread.sleep(1000 * 10)
         System.exit(0)
     }
-
-    client.start()
 }
 
 class Listener(private val client: UnionClient) : ListenerAdapter() {
