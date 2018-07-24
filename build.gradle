@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'com.github.Union-Chat:kt.union:-SNAPSHOT'
+    implementation 'com.github.Union-Chat:kt.union:c75e71a1dc'
     compile "net.dv8tion:JDA:3.7.1_385"
 }
 
